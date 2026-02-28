@@ -7,15 +7,15 @@ import { ChevronRight } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Blog",
-  description: "Thoughts on software development, life, and more.",
+  description: "Insights on full-stack development, SaaS engineering, AI integrations, and building products that matter.",
   openGraph: {
-    title: "Blog",
-    description: "Thoughts on software development, life, and more.",
+    title: "Blog | Oseni Ayomide Daniel",
+    description: "Insights on full-stack development, SaaS engineering, AI integrations, and building products that matter.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Blog",
-    description: "Thoughts on software development, life, and more.",
+    title: "Blog | Oseni Ayomide Daniel",
+    description: "Insights on full-stack development, SaaS engineering, AI integrations, and building products that matter.",
   },
 };
 
