@@ -20,7 +20,7 @@ export const DATA = {
 		"Product Engineer & Full-Stack Developer. I build scalable SaaS solutions, AI-integrated applications, and enterprise-grade automation.",
 	summary:
 		"I am a Product Engineer and Full-Stack Developer specializing in building scalable SaaS solutions, AI-integrated applications, and enterprise-grade automation. With deep expertise in Python (Django, FastAPI) and the Modern Web Stack (Next.js, TypeScript, Node.js), I focus on transforming complex technical challenges into high-performance products. From architecting multi-platform AI auditing tools to engineering automated content pipelines, I thrive on bridging the gap between robust backend systems and intuitive user experiences.",
-	avatarUrl: "/me.png",
+	avatarUrl: "",
 	skills: [
 		{ name: "Python", icon: Python },
 		{ name: "TypeScript", icon: Typescript },
