@@ -5,7 +5,14 @@ import { DATA } from "@/data/resume";
 import { Timeline, TimelineItem, TimelineConnectItem } from "@/components/timeline";
 
 export default function HackathonsSection() {
-    const hackathons = DATA?.hackathons
+    const hackathons = DATA?.hackathons as {
+        title?: string;
+        dates?: string;
+        location?: string;
+        description?: string;
+        image?: string;
+        links?: { href: string; icon?: React.ReactNode; title: string }[];
+    }[]
     if (!hackathons) return
   return (
     <section id="hackathons" className="overflow-hidden">
