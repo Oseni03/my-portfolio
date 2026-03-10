@@ -35,7 +35,7 @@ interface Props {
 	image?: string;
 	video?: string;
 	links?: readonly {
-		icon: React.ReactNode;
+		icon?: React.ReactNode;
 		type: string;
 		href: string;
 	}[];
