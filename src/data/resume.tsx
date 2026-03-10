@@ -102,7 +102,7 @@ export const DATA = {
 	projects: [
 		{
 			title: "Clutterscore",
-			href: "https://github.com/Oseni03/Clutterscore",
+			href: "https://clutterscore.vercel.app",
 			dates: "2025 - Present",
 			active: true,
 			description:
