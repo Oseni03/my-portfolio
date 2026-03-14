@@ -5,10 +5,11 @@ import { NextjsIconDark } from "@/components/ui/svgs/nextjsIconDark";
 import { Typescript } from "@/components/ui/svgs/typescript";
 import { Nodejs } from "@/components/ui/svgs/nodejs";
 import { Python } from "@/components/ui/svgs/python";
-import { Golang } from "@/components/ui/svgs/golang";
 import { Postgresql } from "@/components/ui/svgs/postgresql";
 import { Docker } from "@/components/ui/svgs/docker";
 import { Kubernetes } from "@/components/ui/svgs/kubernetes";
+import { NestjsIconDark } from "@/components/ui/svgs/nestjs";
+import { ExpressIcon } from "@/components/ui/svgs/express";
 
 export const DATA = {
 	name: "Oseni Ayomide Daniel",
@@ -28,6 +29,8 @@ export const DATA = {
 		{ name: "Node.js", icon: Nodejs },
 		{ name: "React.js", icon: ReactLight },
 		{ name: "Next.js", icon: NextjsIconDark },
+		{ name: "Nest.js", icon: NestjsIconDark },
+		{ name: "Express.js", icon: ExpressIcon },
 		{ name: "Django", icon: Python },
 		{ name: "FastAPI", icon: Python },
 		{ name: "PostgreSQL", icon: Postgresql },
@@ -39,7 +42,7 @@ export const DATA = {
 	],
 	navbar: [
 		{ href: "/", icon: HomeIcon, label: "Home" },
-		{ href: "/blog", icon: NotebookIcon, label: "Blog" },
+		// { href: "/blog", icon: NotebookIcon, label: "Blog" },
 	],
 	contact: {
 		email: "oseniayomide57@gmail.com",
@@ -169,7 +172,7 @@ export const DATA = {
 					href: "https://github.com/Oseni03/spaark",
 				},
 			],
-			image: "",
+			image: "/projects/spaark.png",
 			video: "",
 			bullets: [
 				"Implemented a multi-tenant architecture supporting custom domains and white-labeling for 100+ potential users.",
