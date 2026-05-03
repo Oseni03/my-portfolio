@@ -222,43 +222,6 @@ export const DATA = {
             ],
         },
         {
-            title: "Spaark",
-            href: "https://spaark.dev",
-            dates: "December 2024 - Present",
-            active: true,
-            description:
-                "A high-performance, open-source SaaS platform that enables developers to launch professional portfolios in minutes. Built with a focus on customizability and SEO.",
-            technologies: [
-                "Next.js",
-                "TypeScript",
-                "PostgreSQL",
-                "TailwindCSS",
-                "Clerk",
-                "Stripe",
-                "CMS",
-                "SEO",
-            ],
-            links: [
-                {
-                    type: "Website",
-                    href: "https://spaark.dev",
-                    icon: <Icons.globe className="size-3" />,
-                },
-                {
-                    type: "Source",
-                    href: "https://github.com/Oseni03/spaark",
-                    icon: <Icons.github className="size-3" />,
-                },
-            ],
-            image: "",
-            video: "",
-            bullets: [
-                "Enabled multi-brand deployments by implementing a multi-tenant architecture supporting custom domains and white-labeling, resulting in a platform ready for 100+ independent user portfolios.",
-                "Removed the payments complexity by integrating Clerk and Stripe for authentication and subscription management, resulting in a seamless free-to-premium upgrade flow.",
-                "Empowered non-technical users by developing a custom Markdown-based CMS with Next.js, resulting in full blog and project management without touching a single line of code.",
-            ],
-        },
-        {
             title: "SiliconBabylon",
             href: "https://siliconbabylon.vercel.app",
             dates: "December 2024 - Present",
