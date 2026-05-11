@@ -1,0 +1,95 @@
+---
+title: "Episode 1 — Shipped: TempTrap, an API-First Disposable Email Verifier"
+publishedAt: "2025-05-11"
+updatedAt: "2025-05-11"
+author: "Oseni Ayomide Daniel"
+summary: "I said I'd build it publicly. TempTrap is now live — a deterministic, API-first disposable email verifier that runs four signals in parallel and returns a verdict you can actually reason about."
+image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&h=192&fit=crop"
+---
+
+I said I'd build it publicly. Episode 1 is shipped.
+
+**[TempTrap](https://temptrap.vercel.app) is live** — an API-first disposable email verifier, built from scratch, architecture and all.
+
+## The Problem with Blocklist-Based Verifiers
+
+Every blocklist-based email checker has the same fundamental flaw: it tells you what domains were bad _yesterday_. By the time a new disposable provider makes a list, it's already been used to abuse a thousand signup forms.
+
+TempTrap takes a different approach. Instead of asking _"is this domain on a list?"_, it asks _"what does this email look like right now?"_
+
+## How the Verification Engine Works
+
+The engine runs four signals in parallel for every verification request:
+
+### 1. DNS MX Check
+
+Does this domain even receive mail? A domain with no valid MX records can't have real mailboxes — verdict resolved before anything else runs.
+
+### 2. SMTP Probe
+
+Does this specific mailbox actually exist? The engine connects to the domain's mail server and probes the address directly, without sending a message.
+
+### 3. RDAP Domain Age
+
+When was this domain registered? A domain created last week serving as an email provider is a strong disposable signal, regardless of whether it appears on any blocklist.
+
+### 4. Heuristics
+
+Does anything about the address pattern look off? Random-string usernames, generated domain names, and structural patterns common in throwaway addresses all factor into the score.
+
+Every signal feeds a **deterministic scoring engine** — no LLM, no black box. A computed verdict you can inspect, understand, and reason about.
+
+```json title="Sample Response"
+{
+	"email": "xk92jf@quickdrop-mail.xyz",
+	"verdict": "disposable",
+	"confidence": 0.96,
+	"signals": {
+		"mx_valid": true,
+		"smtp_exists": true,
+		"domain_age_days": 4,
+		"heuristic_flags": ["random_username", "new_domain"]
+	},
+	"cached": false,
+	"response_time_ms": 91
+}
+```
+
+## The Detail I'm Most Proud Of: Smart Short-Circuiting
+
+One thing I wished every email verification tool had — and built into TempTrap from day one — is intelligent provider detection.
+
+If the domain is Gmail, Outlook, or another major provider, TempTrap skips the SMTP probe entirely.
+
+That's not laziness. Probing Google's mail servers repeatedly is how you get your IP rate-limited into oblivion. A tool that bricks itself chasing thoroughness isn't fast — it's just poorly designed. TempTrap should be both smart and fast, and those two goals shouldn't conflict.
+
+## Performance and Caching
+
+Results are cached at the domain level in Redis for 24 hours. For high-traffic domains like Gmail and Outlook, this means near-instant responses on repeat lookups with zero redundant probing.
+
+The architecture doc is public. Every decision — including the ones I'm least confident about — is explained.
+
+## What API-First Actually Means Here
+
+No dashboard to navigate. No onboarding flow. No feature locked behind a tier you haven't paid for yet.
+
+One endpoint. One key. One clean JSON response.
+
+```bash title="Verify an email"
+curl -X POST https://temptrap.vercel.app/api/verify \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{ "email": "user@suspiciousdomain.xyz" }'
+```
+
+That's the entire interface. If you're building a signup flow, a lead enrichment pipeline, or an AI agent that processes contact data — it plugs straight in.
+
+## Try It
+
+[TempTrap is live](https://temptrap.vercel.app). Try it on your worst spam address.
+
+---
+
+**What should Episode 2 be?** Drop the SaaS product that's frustrated you most in the comments — that's how the next build gets chosen.
+
+And if you think TempTrap is worth turning into a full SaaS product, I'd genuinely like to hear that too.

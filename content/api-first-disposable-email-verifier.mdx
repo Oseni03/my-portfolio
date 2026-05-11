@@ -1,0 +1,94 @@
+---
+title: "Episode 1 — Rebuild the Stack: An API-First Disposable Email Verifier"
+publishedAt: "2025-05-11"
+updatedAt: "2025-05-11"
+author: "Oseni Ayomide Daniel"
+summary: "Blocklists are losing the war against disposable emails. Here's how I'm rebuilding email verification from scratch — AI-driven, API-first, and built for developers and AI agents."
+image: "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?w=800&h=192&fit=crop"
+---
+
+Every day, thousands of fake users sign up for your product.
+
+They use `mailinator.com`. `guerrillamail.com`. `tempmail.io`. They abuse your free trial, inflate your metrics, and poison your CRM — and your signup form lets them walk right in.
+
+This is not a niche problem. It's a silent tax on every product with an email gate.
+
+## Why Existing Solutions Are Failing
+
+Most "email verification" tools do one of two things:
+
+1. Check that the `@` symbol exists and the domain resolves
+2. Maintain a static blocklist of known disposable providers
+
+The first is trivially useless. The second sounds reasonable — until you realise that disposable email services spin up new domains faster than any static list can track. It's a cat-and-mouse game, and blocklists are losing.
+
+> "The problem with fighting disposable emails using a list is that the list is always yesterday's intelligence."
+
+The services abusing your product aren't using the same ten domains from 2019. They're generating fresh ones constantly — and walking straight through every blocklist on the market.
+
+## A Different Approach
+
+For Episode 1 of **Rebuild the Stack**, I'm building an AI-powered Disposable Email Verifier — not as a SaaS dashboard, not as a subscription with seat limits, but as a pure API endpoint.
+
+You send an email address. You get a verdict.
+
+Here's what makes the approach different:
+
+| Signal                          | What It Catches                                         |
+| ------------------------------- | ------------------------------------------------------- |
+| **Domain age via RDAP**         | Freshly registered throwaway domains                    |
+| **DNS MX record behaviour**     | Catch-all configurations common in disposable services  |
+| **Naming pattern analysis**     | Random-string subdomains and generated domain names     |
+| **AI-driven pattern detection** | Novel disposable domains before they appear on any list |
+
+Instead of asking _"is this domain on a list?"_, the model asks _"does this domain behave like a disposable service?"_ — a fundamentally harder question to game.
+
+## What Gets Built
+
+The architecture is intentionally lean. No dashboard. No onboarding flow. Three things:
+
+1. **A REST endpoint** — `POST /verify` accepts an email, returns a structured verdict with confidence score and detection signals
+2. **A caching layer** — domain-level results cached in Redis so repeat lookups on Gmail, Outlook, and other high-traffic domains return instantly
+3. **Clean documentation** — predictable schema, explicit error codes, no surprises buried in a pricing page
+
+```json title="Sample Response"
+{
+	"email": "user@disposable-domain.xyz",
+	"verdict": "disposable",
+	"confidence": 0.97,
+	"signals": {
+		"domain_age_days": 3,
+		"mx_catchall": true,
+		"pattern_match": true
+	},
+	"cached": false,
+	"response_time_ms": 84
+}
+```
+
+Sub-second responses, designed to sit inline at your signup flow without adding friction.
+
+## Built for Developers and AI Agents
+
+Most verification tools assume a human is operating them through a UI. This one doesn't.
+
+If you're building AI workflows that ingest leads, verify contacts, or clean CRM data — the endpoint plugs straight in. Predictable inputs, structured outputs, explicit confidence scores your agent can branch on. No session management. No dashboard state. Just an API call.
+
+## What I'll Share Publicly
+
+This build is happening in the open. Every episode of Rebuild the Stack includes the full decision trail — not just the finished product:
+
+- Why I structured the confidence score the way I did
+- What I considered building and deliberately cut
+- Where the AI model struggles and how I'm handling edge cases
+- The tradeoffs between latency and detection accuracy
+
+Software is full of people sharing polished outcomes. The decisions made along the way are more useful.
+
+## Launch Is Coming Soon
+
+This is the tool I wished existed every time I built a product with an email gate. So I'm building it.
+
+If you've ever been burned by trial abuse, fake signups, or a CRM full of `@mailinator.com` addresses — I'd genuinely like to hear how you handled it. Drop it in the comments.
+
+Follow along to catch the launch when it drops.

@@ -1,0 +1,94 @@
+---
+title: "Episode 2 — Shipped: Routeswift, Lead Routing and Activity Capture as a Pure API"
+publishedAt: "2025-05-11"
+updatedAt: "2025-05-11"
+author: "Oseni Ayomide Daniel"
+summary: "LeanData costs $24,000/year to answer one question: who gets this lead? Routeswift answers it for free — lead routing and activity capture as a pure REST API, with no CRM, no calendar product, and no enterprise procurement process."
+image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=192&fit=crop"
+---
+
+LeanData costs $24,000/year to answer one question: _who gets this lead?_
+
+I built the same answer for free.
+
+**[Routeswift](https://routeswit.vercel.app) is live** — Episode 2 of the API-First Rebuild. Lead routing and activity capture as a pure REST API. No CRM. No calendar product. No enterprise procurement process. Just the two primitives every B2B sales workflow needs, finally composable.
+
+Here's everything running under the hood.
+
+## The Routing Engine
+
+`POST` a lead with its attributes. Routeswift evaluates your active ruleset in priority order — first match wins.
+
+Assignment can be a specific rep, round-robin across a pool, or territory mapping. The result comes back enriched: who owns it, which rule fired, and how long the routing decision took in milliseconds.
+
+```json title="Route a lead"
+POST /leads/route
+
+{
+  "email": "buyer@acmecorp.com",
+  "company": "Acme Corp",
+  "title": "Head of RevOps",
+  "region": "EMEA",
+  "deal_size_signal": "enterprise"
+}
+```
+
+```json title="Response"
+{
+	"assigned_to": "rep@yourteam.com",
+	"rule_matched": "emea-enterprise",
+	"routing_time_ms": 43,
+	"fallback_used": false
+}
+```
+
+Every decision is written to an immutable `RoutingLog` — not for compliance theatre, but because when a lead goes cold, you need to know exactly what happened and why.
+
+## Rep Lifecycle Handling
+
+Reps go OOO. Reps hit overflow. Routeswift handles both — with a deliberate **1-hop overflow limit**.
+
+Allowing deeper overflow chains risked infinite loops in production. If rep A is OOO and overflows to rep B, and B is also OOO, you get a clean `OVERFLOW_OOO` error instead of a silent routing failure.
+
+Explicit beats clever.
+
+## Round-Robin That Actually Works
+
+Naive round-robin breaks under concurrent load — two leads arrive simultaneously, both read the same counter, the same rep gets assigned twice.
+
+Routeswift uses an **atomic transactional read-increment-write pattern** that makes round-robin safe under real traffic. The counter never races.
+
+## Activity Capture
+
+Log every sales touch against a contact — emails sent, calls made, meetings booked.
+
+Activities are **idempotent by contact + type + timestamp**, which means webhook retries don't create duplicate entries. Built for systems that retry, not just systems that run once.
+
+```json title="Log an activity"
+POST /activities
+
+{
+  "contact_email": "buyer@acmecorp.com",
+  "type": "email_sent",
+  "rep": "rep@yourteam.com",
+  "timestamp": "2025-05-11T09:30:00Z",
+  "metadata": { "subject": "Quick follow-up" }
+}
+```
+
+## Analytics and SLA Monitoring
+
+| Metric                           | What It Tells You                                     |
+| -------------------------------- | ----------------------------------------------------- |
+| **Speed-to-lead** (median + p90) | How fast leads are being contacted                    |
+| **Fallback rate**                | Warns when >5% of leads can't be routed cleanly       |
+| **Rep distribution**             | Whether routing load is balanced across the team      |
+| **Meeting rate**                 | Whether routed leads are actually converting to calls |
+
+Everything you need to know if your routing is actually working — not just running.
+
+## Completely Free
+
+No pricing tier. No seat limit. No feature gated behind an upgrade.
+
+[**Routeswift is live**](https://routeswit.vercel.app) — try routing your first lead today and tell me what breaks.

@@ -1,0 +1,95 @@
+---
+title: "Episode 2 — Rebuild the Stack: Lead Routing and Activity Capture as a Pure API"
+publishedAt: "2025-05-11"
+updatedAt: "2025-05-11"
+author: "Oseni Ayomide Daniel"
+summary: "LeanData costs $24k/year. Salesforce activity capture requires a $330/user/month tier. Episode 2 rebuilds both primitives — lead routing and activity capture — as a clean, composable API any team can actually afford."
+image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=192&fit=crop"
+---
+
+Episode 2 of **Rebuild the Stack** is locked.
+
+I'm going after one of the most expensive, most broken parts of the B2B sales stack — and I'm building the two primitives that every RevOps team actually needs, without the enterprise contract attached.
+
+## The Routing Problem
+
+Here's a situation every RevOps team knows intimately.
+
+A lead fills out a form. You have a company name, a job title, a region, a deal size signal. Now — who gets it?
+
+If you're on Salesforce, you're writing assignment rules in a UI that breaks every time your territory changes. If you can afford LeanData, you're paying **$24,000/year** for a routing engine wrapped in enterprise sales calls and implementation timelines. If you use Chili Piper, you get lead routing — but you're also now locked into their calendar product whether you wanted it or not.
+
+And not a single one of them exposes a clean API that says:
+
+```
+
+→ Here is a lead with these attributes.
+← Tell me who owns it.
+
+```
+
+That's Problem 1.
+
+## The Activity Capture Problem
+
+Problem 2 starts the moment the lead gets assigned.
+
+Did the rep reach out? Did the prospect open the email? Did a meeting get booked? Did the deal go cold after the first call?
+
+Salesforce can auto-capture all of this — but only on their **Unlimited tier, at $330 per user per month**. Every team below that threshold logs activity manually. Which means it mostly doesn't happen. Which means your pipeline data is, at best, a heavily edited version of reality.
+
+| Tool                        | What It Costs               | What It Locks You Into         |
+| --------------------------- | --------------------------- | ------------------------------ |
+| LeanData                    | ~$24k/year                  | Enterprise procurement process |
+| Chili Piper                 | Routing tier pricing        | Their calendar product         |
+| Salesforce activity capture | $330/user/month (Unlimited) | Full Salesforce stack          |
+| Building it yourself        | Engineering time            | Custom maintenance forever     |
+
+## Why These Two Problems Belong Together
+
+Routing and activity capture aren't separate workflows — they're the same workflow, split across two billing line items.
+
+Routing is where the lead enters the system. Activity capture is everything that follows the lead through it. Same buyer. Same contact identity layer. Same RevOps engineer trying to make sense of both. Splitting them across two vendors — or two budget conversations — is a product decision made for commercial reasons, not operational ones.
+
+## What I'm Building: Routeswit
+
+**Routeswit** is lead routing and activity capture as a pure API.
+
+Send a lead in, get an assignment back. See everything that happened after. No CRM bundled in. No calendar product attached. No $24k/year contract requiring three procurement approvals.
+
+Two primitives. Composable. Documented. Accessible without an enterprise sales process.
+
+```json title="Route a lead"
+POST /leads/route
+
+{
+  "email": "buyer@company.com",
+  "company": "Acme Corp",
+  "title": "VP of Engineering",
+  "region": "EMEA",
+  "deal_size_signal": "enterprise"
+}
+```
+
+```json title="Response"
+{
+	"assigned_to": "rep@yourteam.com",
+	"rule_matched": "emea-enterprise-engineering",
+	"confidence": 1.0,
+	"fallback_used": false
+}
+```
+
+The activity layer sits on top of the same contact identity — so every email open, meeting booking, and stage change ties back to the original routing decision without any manual reconciliation.
+
+## Building This Publicly
+
+Like Episode 1, every architecture decision gets shared as I go — including the ones I'm least sure about and the tradeoffs I make along the way.
+
+The goal isn't a polished launch post. It's a transparent build log that's actually useful to other engineers working in this space.
+
+---
+
+**Are you a RevOps engineer or building sales tooling?** I'd genuinely like to talk before I write a single line of code. The best products in this space get built with the people who feel the pain most directly.
+
+Drop a comment or send me a DM.
